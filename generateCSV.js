@@ -6,23 +6,26 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csvWriter = createCsvWriter({
   path: 'booking.csv',
   header: [
-    { id: 'user_email', title: 'USER_EMAIL' },
-    { id: 'restaurant_id', title: 'RESTAURANT_ID' },
+    { id: 'user_id', title: 'USER_ID' }, // Changed from USER_EMAIL to USER_ID
+    { id: 'item_id', title: 'ITEM_ID' }, // Changed from RESTAURANT_ID to ITEM_ID
     { id: 'adult', title: 'ADULT' },
     { id: 'kids', title: 'KIDS' },
-    { id: 'total_price', title: 'TOTAL_PRICE' },
-    { id: 'created_at', title: 'CREATED_AT' }
+    { id: 'date', title: 'DATE' },
+    { id: 'start_time', title: 'START_TIME' },
+    { id: 'timestamp', title: 'TIMESTAMP' } // Added TIMESTAMP column
   ]
 });
 
 const generateRandomData = () => {
+  const date = faker.date.past();
   return {
-    user_email: faker.internet.email(),
-    restaurant_id: faker.datatype.number({ min: 1, max: 100 }),
-    adult: faker.datatype.number({ min: 1, max: 10 }),
-    kids: faker.datatype.number({ min: 0, max: 3 }),
-    total_price: faker.commerce.price(100, 5000, 0),
-    created_at: faker.date.past().toISOString()
+    user_id: faker.number.int({ min: 1, max: 100000 }), // Generate random user_id
+    item_id: faker.number.int({ min: 1, max: 100 }), // Changed from restaurant_id to item_id
+    adult: faker.number.int({ min: 1, max: 10 }),
+    kids: faker.number.int({ min: 0, max: 3 }),
+    date: date.toISOString().split('T')[0], // Extract the date part
+    start_time: date.toISOString().split('T')[1].split('.')[0], // Extract the time part
+    timestamp: date.getTime() // Generate UNIX timestamp
   };
 };
 

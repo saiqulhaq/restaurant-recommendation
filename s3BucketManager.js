@@ -1,4 +1,6 @@
-const { S3Client, CreateBucketCommand, HeadBucketCommand } = require('@aws-sdk/client-s3');
+require('dotenv').config();
+
+const { S3Client, CreateBucketCommand, HeadBucketCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
@@ -22,4 +24,20 @@ async function createS3Bucket(bucketName) {
   }
 }
 
-module.exports = { createS3Bucket };
+async function doesFileExist(bucketName, fileName) {
+  try {
+    const command = new HeadObjectCommand({
+      Bucket: bucketName,
+      Key: fileName,
+    });
+    await s3Client.send(command);
+    return true; // The file exists
+  } catch (error) {
+    if (error.name === 'NotFound') {
+      return false; // The file does not exist
+    }
+    throw error; // An error occurred
+  }
+}
+
+module.exports = { createS3Bucket, doesFileExist };

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const fs = require("fs");
 const path = require("path");
@@ -25,9 +27,4 @@ async function uploadFileToS3(bucketName, filePath) {
   }
 }
 
-// Replace 'your-bucket-name' with your actual S3 bucket name
-const bucketName = 'hungryhub-test-bucket';
-const filePath = "./booking.csv"; // Path to the CSV file
-
-// Upload the file
-uploadFileToS3(bucketName, filePath);
+module.exports = { uploadFileToS3 };
